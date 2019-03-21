@@ -7,11 +7,13 @@ import (
 )
 
 var (
-	Conf struct{
-		MongoURI string	`yaml:"MongoURI"`
-		Qq []string	`yaml:"qq"`
-		Iqiyi []string	`yaml:"iqiyi"`
-		Youku []string	`yaml:"youku"`
+	Conf struct {
+		RunSpider bool     `yaml:"RunSpider"`
+		FilteMin  int      `yaml:"FilteMin"`
+		MongoURI  string   `yaml:"MongoURI"`
+		Qq        []string `yaml:"qq"`
+		Iqiyi     []string `yaml:"iqiyi"`
+		Youku     []string `yaml:"youku"`
 	}
 )
 

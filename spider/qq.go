@@ -1,11 +1,13 @@
 package spider
 
 import (
+	"FamilyWatch/conf"
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/hu17889/go_spider/core/common/page"
 	"strconv"
 	"strings"
+	"time"
 )
 
 var (
@@ -35,13 +37,19 @@ func (this *QQVideoPageProcessor) Process(p *page.Page) {
 		url, _ := s.Find("div>a").Attr("href")
 		title, _ := s.Find("div>a>img").Attr("alt")
 		img, _ := s.Find("div>a>img").Attr("src")
+		dur := s.Find("div>a>span[class=figure_caption]>span").Text()
 		//title = strings.Replace(title, " ", "", -1)
-		fmt.Printf("Review %d: %s - %s - %s\n", i, url, title, img)
-		gQQCrawled = append(gQQCrawled, CrawlResult{
-			Url:   url,
-			Title: title,
-			Img:   img,
-		})
+		fmt.Printf("Review %d: %s - %s - %s - %s\n", i, url, title, img, dur)
+		min, _ := time.Parse("15:04:05", dur)
+		//按分钟过滤
+		if min.Minute() >= conf.Conf.FilteMin {
+			gQQCrawled = append(gQQCrawled, CrawlResult{
+				Url:   url,
+				Title: title,
+				Img:   img,
+				Dur:   dur,
+			})
+		}
 	})
 
 	url := p.GetRequest().Url
