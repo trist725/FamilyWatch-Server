@@ -9,6 +9,7 @@ require (
 	github.com/go-stack/stack v1.8.0 // indirect
 	github.com/golang/snappy v0.0.1 // indirect
 	github.com/google/go-cmp v0.2.0 // indirect
+	github.com/gorilla/websocket v1.4.0
 	github.com/hu17889/go_spider v0.0.0-20150809033053-85ede20bf88b
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/stretchr/testify v1.3.0 // indirect

@@ -1,12 +1,13 @@
 package spider
 
 import (
+	"FamilyWatch/global"
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/hu17889/go_spider/core/common/page"
 )
 
-type IqiyiResult []CrawlResult
+type IqiyiResult []global.CrawlResult
 
 type IqiyiVideoPageProcessor struct {
 }

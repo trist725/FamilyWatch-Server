@@ -4,6 +4,7 @@ import (
 	"FamilyWatch/conf"
 	"FamilyWatch/db/mongo"
 	myspider "FamilyWatch/spider"
+	"FamilyWatch/ws"
 	"github.com/hu17889/go_spider/core/spider"
 )
 
@@ -24,7 +25,8 @@ func main() {
 		for _, url := range urls {
 			qqSpider.AddUrl(url, "html")
 		}
-		qqSpider.Run()
+		go qqSpider.Run()
 	}
 
+	ws.Start()
 }

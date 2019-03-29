@@ -11,23 +11,25 @@ import (
 )
 
 var (
-	Collection *mongo.Collection
+	CrawledColl *mongo.Collection
+	UserColl    *mongo.Collection
 )
 
 func Init() {
-	ctx, _ := context.WithTimeout(context.Background(), 10 * time.Second)
+	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(conf.Conf.MongoURI))
 
-	ctx, _ = context.WithTimeout(context.Background(), 2 * time.Second)
+	ctx, _ = context.WithTimeout(context.Background(), 2*time.Second)
 	if err = client.Ping(ctx, readpref.Primary()); err != nil {
 		log.Fatalf("ping mongo: %v", err)
 		return
 	}
 
-	Collection = client.Database("FamilyWatch").Collection("urls")
+	CrawledColl = client.Database("FamilyWatch").Collection("crawled")
+	UserColl = client.Database("FamilyWatch").Collection("user")
 }
 
 func Dispose() {
-	Collection = nil
+	CrawledColl = nil
+	UserColl = nil
 }
-

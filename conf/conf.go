@@ -8,12 +8,16 @@ import (
 
 var (
 	Conf struct {
-		RunSpider bool     `yaml:"RunSpider"`
-		FilteMin  int      `yaml:"FilteMin"`
-		MongoURI  string   `yaml:"MongoURI"`
-		Qq        []string `yaml:"qq"`
-		Iqiyi     []string `yaml:"iqiyi"`
-		Youku     []string `yaml:"youku"`
+		RunSpider     bool     `yaml:"RunSpider"`
+		FilterMin     int      `yaml:"FilteMin"`
+		MaxCrawlIndex int      `yaml:"MaxCrawlIndex"`
+		WsAddr        string   `yaml:"WsAddr"`
+		MongoURI      string   `yaml:"MongoURI"`
+		CertFile      string   `yaml:"CertFile"`
+		KeyFile       string   `yaml:KeyFile`
+		Qq            []string `yaml:"qq"`
+		Iqiyi         []string `yaml:"iqiyi"`
+		Youku         []string `yaml:"youku"`
 	}
 )
 

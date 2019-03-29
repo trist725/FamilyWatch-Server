@@ -22,6 +22,8 @@ _testmain.go
 *.exe
 .idea
 *.log
+*.key
+*.pem
 bin
 pkg
 vendor

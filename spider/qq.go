@@ -2,6 +2,7 @@ package spider
 
 import (
 	"FamilyWatch/conf"
+	"FamilyWatch/global"
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/hu17889/go_spider/core/common/page"
@@ -12,11 +13,10 @@ import (
 
 var (
 	gCrawlIndex = 1
-	gMaxIndex   = 20
 	gQQCrawled  QQResult
 )
 
-type QQResult []CrawlResult
+type QQResult []global.CrawlResult
 
 type QQVideoPageProcessor struct {
 }
@@ -42,8 +42,8 @@ func (this *QQVideoPageProcessor) Process(p *page.Page) {
 		fmt.Printf("Review %d: %s - %s - %s - %s\n", i, url, title, img, dur)
 		min, _ := time.Parse("15:04:05", dur)
 		//按分钟过滤
-		if min.Minute() >= conf.Conf.FilteMin {
-			gQQCrawled = append(gQQCrawled, CrawlResult{
+		if min.Minute() >= conf.Conf.FilterMin {
+			gQQCrawled = append(gQQCrawled, global.CrawlResult{
 				Url:   url,
 				Title: title,
 				Img:   img,
@@ -55,7 +55,7 @@ func (this *QQVideoPageProcessor) Process(p *page.Page) {
 	url := p.GetRequest().Url
 	old := "&cur=" + strconv.Itoa(gCrawlIndex) + "&"
 	gCrawlIndex++
-	if gCrawlIndex > gMaxIndex {
+	if gCrawlIndex > conf.Conf.MaxCrawlIndex {
 		gCrawlIndex = 1
 		return
 	}
