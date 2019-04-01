@@ -4,17 +4,17 @@ import "FamilyWatch/global"
 
 type Request struct {
 	//操作类型,1-登陆,2-刷新,3-收藏
-	Op int `json:"op"`
+	Op int `json:"op, omitempty"`
 	//客户端调用wx.login()获取到的登陆凭证
-	Code string `json:"code"`
+	Code string `json:"code, omitempty"`
 	//用户唯一标识,必填
-	Openid string `json:"openid"`
-	//刷新类别
-	Rcategory string `json:"category"`
+	Openid string `json:"openid, omitempty"`
+	//刷新类别,"随机","养生"...
+	Rcategory string `json:"category, omitempty"`
 	//刷新数量
-	Rnum int `json:"num"`
+	Rnum int `json:"num, omitempty"`
 	//要收藏的视频url
-	Url string `json:"url"`
+	Url string `json:"url, omitempty"`
 }
 
 type Respond struct {
@@ -36,9 +36,9 @@ type S2W_Code2Session struct {
 }
 
 type W2S_Code2Session struct {
-	openid      string //用户唯一标识
-	session_key string //会话密钥
-	unionid     string //用户在开放平台的唯一标识符，在满足 UnionID 下发条件的情况下会返回，详见 UnionID 机制说明。
-	errcode     int    //错误码,0-请求成功,-1-系统繁忙,此时请开发者稍候再试,40029-code无效,45011-频率限制,每个用户每分钟100次
-	errmsg      string //错误信息
+	Openid      string //用户唯一标识
+	Session_key string //会话密钥
+	Unionid     string //用户在开放平台的唯一标识符，在满足 UnionID 下发条件的情况下会返回，详见 UnionID 机制说明。
+	Errcode     int    //错误码,0-请求成功,-1-系统繁忙,此时请开发者稍候再试,40029-code无效,45011-频率限制,每个用户每分钟100次
+	Errmsg      string //错误信息
 }

@@ -19,13 +19,11 @@ func main() {
 	)
 
 	if runSpider {
-		qqSpider = spider.NewSpider(myspider.NewQQVideoPageProcessor(), "qqvideo").
-			//AddPipeline(pipeline.NewPipelineConsole()).
-			SetThreadnum(uint(len(urls)))
-		for _, url := range urls {
+		for c, url := range urls {
+			qqSpider = spider.NewSpider(myspider.NewQQVideoPageProcessor().SetCategory(c), "qqvideo")
 			qqSpider.AddUrl(url, "html")
+			go qqSpider.Run()
 		}
-		go qqSpider.Run()
 	}
 
 	ws.Start()

@@ -13,16 +13,19 @@ import (
 
 var (
 	gCrawlIndex = 1
-	gQQCrawled  QQResult
 )
 
-type QQResult []global.CrawlResult
-
 type QQVideoPageProcessor struct {
+	category string
 }
 
 func NewQQVideoPageProcessor() *QQVideoPageProcessor {
 	return &QQVideoPageProcessor{}
+}
+
+func (this *QQVideoPageProcessor) SetCategory(c string) *QQVideoPageProcessor {
+	this.category = c
+	return this
 }
 
 func (this *QQVideoPageProcessor) Process(p *page.Page) {
@@ -43,12 +46,15 @@ func (this *QQVideoPageProcessor) Process(p *page.Page) {
 		min, _ := time.Parse("15:04:05", dur)
 		//按分钟过滤
 		if min.Minute() >= conf.Conf.FilterMin {
-			gQQCrawled = append(gQQCrawled, global.CrawlResult{
-				Url:   url,
-				Title: title,
-				Img:   img,
-				Dur:   dur,
-			})
+			//关键词分类
+			if this.category != "" {
+				global.QQCrawled[this.category] = append(global.QQCrawled[this.category], &global.CrawlResult{
+					Url:   url,
+					Title: title,
+					Img:   img,
+					Dur:   dur,
+				})
+			}
 		}
 	})
 
@@ -65,6 +71,6 @@ func (this *QQVideoPageProcessor) Process(p *page.Page) {
 }
 
 func (this *QQVideoPageProcessor) Finish() {
-	fmt.Printf("TODO:before end spider \r\n")
-	Persistence(gQQCrawled)
+	fmt.Printf("[%s] crawled num: [%d] \r\n", this.category, len(global.QQCrawled[this.category]))
+	//Persistence(gQQCrawled)
 }

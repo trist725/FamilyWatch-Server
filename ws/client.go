@@ -62,8 +62,9 @@ func (c *Client) readPump() {
 	for {
 		var req = Request{}
 		if err := c.conn.ReadJSON(&req); err != nil {
+			log.Print("ReadJSON: ", err)
 			if websocket.IsUnexpectedCloseError(err) {
-				log.Printf("error: %v", err)
+				log.Printf("websocket: %v", err)
 				c.conn.WriteMessage(websocket.CloseMessage, []byte{})
 				return
 			}
@@ -98,6 +99,7 @@ func (c *Client) writePump() {
 			}
 
 			c.conn.WriteJSON(&message)
+			log.Print("send...", message)
 		case <-ticker.C:
 			c.conn.SetWriteDeadline(time.Now().Add(writeWait))
 			if err := c.conn.WriteMessage(websocket.PingMessage, nil); err != nil {
