@@ -72,5 +72,7 @@ func (this *QQVideoPageProcessor) Process(p *page.Page) {
 
 func (this *QQVideoPageProcessor) Finish() {
 	fmt.Printf("[%s] crawled num: [%d] \r\n", this.category, len(global.QQCrawled[this.category]))
-	//Persistence(gQQCrawled)
+	for k, v := range global.QQCrawled {
+		Persistence(k, v)
+	}
 }

@@ -13,7 +13,9 @@ require (
 	github.com/hu17889/go_spider v0.0.0-20150809033053-85ede20bf88b
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/stretchr/testify v1.3.0 // indirect
+	github.com/tealeg/xlsx v1.0.3 // indirect
 	github.com/tidwall/pretty v0.0.0-20180105212114-65a9db5fad51 // indirect
+	github.com/trist725/mgsu v0.0.0-20190115074354-115de13440b5
 	github.com/xdg/scram v0.0.0-20180814205039-7eeb5667e42c // indirect
 	github.com/xdg/stringprep v1.0.0 // indirect
 	go.mongodb.org/mongo-driver v1.0.0

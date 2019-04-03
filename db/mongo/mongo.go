@@ -11,8 +11,12 @@ import (
 )
 
 var (
-	CrawledColl *mongo.Collection
-	UserColl    *mongo.Collection
+	Colls []*mongo.Collection
+
+	FoyuanColl    *mongo.Collection
+	XiaoDaoColl   *mongo.Collection
+	YangShengColl *mongo.Collection
+	UserColl      *mongo.Collection
 )
 
 func Init() {
@@ -25,11 +29,21 @@ func Init() {
 		return
 	}
 
-	CrawledColl = client.Database("FamilyWatch").Collection("crawled")
+	FoyuanColl = client.Database("FamilyWatch").Collection("FoYuan")
+	XiaoDaoColl = client.Database("FamilyWatch").Collection("XiaoDao")
+	YangShengColl = client.Database("FamilyWatch").Collection("YangSheng")
 	UserColl = client.Database("FamilyWatch").Collection("user")
+
+	Colls = append(Colls, FoyuanColl)
+	Colls = append(Colls, XiaoDaoColl)
+	Colls = append(Colls, YangShengColl)
+	Colls = append(Colls, UserColl)
+
 }
 
 func Dispose() {
-	CrawledColl = nil
-	UserColl = nil
+	for _, c := range Colls {
+		c = nil
+		_ = c
+	}
 }

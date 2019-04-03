@@ -71,7 +71,7 @@ func (c *Client) readPump() {
 			return
 		}
 
-		log.Print("recv........", req)
+		log.Printf("recv........%#v", req)
 		resp := req.Process()
 		c.send <- resp
 	}

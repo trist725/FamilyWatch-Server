@@ -7,6 +7,7 @@ import (
 	"context"
 	"encoding/json"
 	"flag"
+	"github.com/trist725/mgsu/util"
 	"go.mongodb.org/mongo-driver/bson"
 	"log"
 	"net/http"
@@ -36,10 +37,11 @@ func (req Request) Process() (resp Respond) {
 		userData = global.Users
 		userTmp  = global.User{}
 		ctx, _   = context.WithTimeout(context.Background(), 10*time.Second)
+		exist    bool
 	)
 
 	if req.Openid != "" {
-		if _, ok := userData[req.Openid]; !ok {
+		if _, exist = userData[req.Openid]; !exist {
 			//不在内存中则查找是否在数据库中
 			if err := mongo.UserColl.FindOne(ctx, bson.M{"_id": req.Openid}).Decode(&userTmp); err != nil {
 				log.Print("UserColl.FindOne: ", err)
@@ -60,6 +62,9 @@ func (req Request) Process() (resp Respond) {
 STARTOP:
 	switch req.Op {
 	case 1:
+		if exist {
+			break
+		}
 		restResp, _ = http.Get("https://api.weixin.qq.com/sns/jscode2session?appid=" +
 			"wx3cdf9c0b5acf3e86" + "&secret=" + "7cb1a56dbea22e07ca6ef24999abdc97" +
 			"&js_code=" + req.Code + "&grant_type=" + "authorization_code")
@@ -75,35 +80,32 @@ STARTOP:
 			break
 		}
 		resp.Openid = w2sJson.Openid
-
-	case 2:
-		_, ok := userData[req.Openid]
-		if !ok {
-			log.Print("get user failed on case 2")
-			resp.Errcode = 2
-			return resp
+		//写入内存待同步
+		userData[req.Openid] = &global.User{
+			Openid:     w2sJson.Openid,
+			SessionKey: w2sJson.Session_key,
+			Unionid:    w2sJson.Unionid,
+			LastLogin:  time.Now().Unix(),
 		}
 
-		switch req.Rcategory {
-		case "随机":
-		case "养生":
-		case "佛缘":
-		case "孝道":
-		default:
+	case 2:
+		crawled, ok := global.QQCrawled[req.Rcategory]
+		if (!ok && req.Rcategory != "随机") ||
+			req.Rnum <= 0 || req.Rnum > conf.Conf.RefreshLimit {
 			resp.Errcode = 2
 			break
 		}
 
-	case 3:
-		_, ok := userData[req.Openid]
-		if !ok {
-			log.Print("get user failed on case 3")
-			resp.Errcode = 3
-			return resp
+		for ; req.Rnum > 0; req.Rnum-- {
+			r := util.RandomInt(0, len(crawled))
+			resp.Resources = append(resp.Resources, *crawled[r])
 		}
+		resp.Errcode = 0
+
+	case 3:
 
 	default:
-
+		resp.Errcode = -1
 	}
 
 	resp.Op = req.Op

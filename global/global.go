@@ -2,21 +2,20 @@ package global
 
 type CrawlResult struct {
 	//_id
-	id    string
+	Id    string `bson:"_id"`
 	Url   string
 	Title string
 	Img   string
 	Dur   string
-	Faved bool
 }
 
 type User struct {
 	//_id
-	Openid     string
+	Openid     string `bson:"_id"`
 	SessionKey string
 	Unionid    string
 	//存CrawlResult的_id
-	Fav       []string
+	Favs      []string
 	LastLogin int64
 }
 

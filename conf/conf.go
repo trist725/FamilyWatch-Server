@@ -11,6 +11,7 @@ var (
 		RunSpider     bool              `yaml:"RunSpider"`
 		FilterMin     int               `yaml:"FilteMin"`
 		MaxCrawlIndex int               `yaml:"MaxCrawlIndex"`
+		RefreshLimit  int               `yaml:"RefreshLimit"`
 		WsAddr        string            `yaml:"WsAddr"`
 		MongoURI      string            `yaml:"MongoURI"`
 		CertFile      string            `yaml:"CertFile"`

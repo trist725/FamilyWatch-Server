@@ -26,6 +26,8 @@ type Respond struct {
 	Errcode int `json:"errcode"`
 	//资源
 	Resources []global.CrawlResult `json:"resources"`
+	//已收藏的资源的_id
+	Favs []string
 }
 
 type S2W_Code2Session struct {
