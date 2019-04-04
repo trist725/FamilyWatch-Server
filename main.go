@@ -3,6 +3,7 @@ package main
 import (
 	"FamilyWatch/conf"
 	"FamilyWatch/db/mongo"
+	"FamilyWatch/global"
 	myspider "FamilyWatch/spider"
 	"FamilyWatch/ws"
 	"github.com/hu17889/go_spider/core/spider"
@@ -22,9 +23,13 @@ func main() {
 		for c, url := range urls {
 			qqSpider = spider.NewSpider(myspider.NewQQVideoPageProcessor().SetCategory(c), "qqvideo")
 			qqSpider.AddUrl(url, "html")
-			go qqSpider.Run()
+			qqSpider.Run()
 		}
+	} else {
+		//todo: 读库
 	}
+
+	go global.Sync()
 
 	ws.Start()
 }

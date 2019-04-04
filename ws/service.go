@@ -40,24 +40,27 @@ func (req Request) Process() (resp Respond) {
 		exist    bool
 	)
 
-	if req.Openid != "" {
-		if _, exist = userData[req.Openid]; !exist {
-			//不在内存中则查找是否在数据库中
-			if err := mongo.UserColl.FindOne(ctx, bson.M{"_id": req.Openid}).Decode(&userTmp); err != nil {
-				log.Print("UserColl.FindOne: ", err)
-				//数据库也找不到
-				if req.Code == "" {
-					resp.Errcode = 1
-					return resp
-				} else {
-					goto STARTOP
-				}
-			}
-			//数据库里有,读入内存
-			userData[req.Openid] = &userTmp
-		}
-		userTmp.LastLogin = time.Now().Unix()
+	//刷新直接给数据 不用登陆
+	if req.Op == 2 {
+		goto STARTOP
 	}
+
+	if _, exist = userData[req.Openid]; !exist {
+		//不在内存中则查找是否在数据库中
+		if err := mongo.UserColl.FindOne(ctx, bson.M{"_id": req.Openid}).Decode(&userTmp); err != nil {
+			log.Print("UserColl.FindOne: ", err)
+			//数据库也找不到
+			if req.Code == "" || req.Op != 1 {
+				goto END
+			} else {
+				goto STARTOP
+			}
+		}
+		//数据库里有,读入内存
+		userData[req.Openid] = &userTmp
+	}
+
+	userTmp.LastLogin = time.Now().Unix()
 
 STARTOP:
 	switch req.Op {
@@ -81,7 +84,7 @@ STARTOP:
 		}
 		resp.Openid = w2sJson.Openid
 		//写入内存待同步
-		userData[req.Openid] = &global.User{
+		userData[w2sJson.Openid] = &global.User{
 			Openid:     w2sJson.Openid,
 			SessionKey: w2sJson.Session_key,
 			Unionid:    w2sJson.Unionid,
@@ -89,25 +92,54 @@ STARTOP:
 		}
 
 	case 2:
-		crawled, ok := global.QQCrawled[req.Rcategory]
-		if (!ok && req.Rcategory != "随机") ||
-			req.Rnum <= 0 || req.Rnum > conf.Conf.RefreshLimit {
+		if req.Rnum <= 0 || req.Rnum > conf.Conf.RefreshLimit {
 			resp.Errcode = 2
 			break
 		}
+		var crawled []*global.CrawlResult
+		var ok bool
+		if req.Rcategory == "随机" {
+			for _, c := range global.QQCrawled {
+				crawled = c
+				break
+			}
+		} else {
+			if crawled, ok = global.QQCrawled[req.Rcategory]; !ok {
+				resp.Errcode = 2
+				break
+			}
+		}
 
 		for ; req.Rnum > 0; req.Rnum-- {
+			if len(crawled) == 0 {
+				break
+			}
 			r := util.RandomInt(0, len(crawled))
 			resp.Resources = append(resp.Resources, *crawled[r])
 		}
 		resp.Errcode = 0
 
 	case 3:
+		for _, c := range global.QQCrawled {
+			for _, v := range c {
+				if v.Id == req.FavId {
+					userData[req.Openid].Favs = append(userData[req.Openid].Favs, v.Id)
+					resp.Errcode = 0
+					goto END
+				}
+			}
+		}
+		resp.Errcode = 3
+	case 4:
+		resp.Favs = userData[req.Openid].Favs
+		resp.Errcode = 0
 
 	default:
+		log.Print("invalid op")
 		resp.Errcode = -1
 	}
 
+END:
 	resp.Op = req.Op
 
 	return resp

@@ -41,13 +41,13 @@ func (this *QQVideoPageProcessor) Process(p *page.Page) {
 		title, _ := s.Find("div>a>img").Attr("alt")
 		img, _ := s.Find("div>a>img").Attr("src")
 		dur := s.Find("div>a>span[class=figure_caption]>span").Text()
-		//title = strings.Replace(title, " ", "", -1)
+		title = strings.Replace(title, "\006", "", -1)
 		fmt.Printf("Review %d: %s - %s - %s - %s\n", i, url, title, img, dur)
 		min, _ := time.Parse("15:04:05", dur)
 		//按分钟过滤
 		if min.Minute() >= conf.Conf.FilterMin {
 			//关键词分类
-			if this.category != "" {
+			if this.category != "" && strings.Contains(url, "/x/page") {
 				global.QQCrawled[this.category] = append(global.QQCrawled[this.category], &global.CrawlResult{
 					Url:   url,
 					Title: title,

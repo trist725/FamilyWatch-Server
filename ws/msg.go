@@ -3,7 +3,7 @@ package ws
 import "FamilyWatch/global"
 
 type Request struct {
-	//操作类型,1-登陆,2-刷新,3-收藏
+	//操作类型,1-登陆,2-刷新,3-收藏,4-获取收藏
 	Op int `json:"op, omitempty"`
 	//客户端调用wx.login()获取到的登陆凭证
 	Code string `json:"code, omitempty"`
@@ -13,8 +13,8 @@ type Request struct {
 	Rcategory string `json:"category, omitempty"`
 	//刷新数量
 	Rnum int `json:"num, omitempty"`
-	//要收藏的视频url
-	Url string `json:"url, omitempty"`
+	//要收藏的视频id
+	FavId string `json:"favid, omitempty"`
 }
 
 type Respond struct {
