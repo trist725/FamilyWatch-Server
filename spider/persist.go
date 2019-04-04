@@ -38,7 +38,7 @@ func Persistence(category string, crawResults []*global.CrawlResult) {
 		if err := coll.FindOne(context.Background(), bson.D{{"url", cr.Url}}).Decode(&crawlTmp); err == nil {
 			//已存在
 			if crawlTmp.Id != "" {
-				break
+				continue
 			}
 		}
 
