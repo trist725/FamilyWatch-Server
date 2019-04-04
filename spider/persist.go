@@ -12,7 +12,8 @@ import (
 
 func Persistence(category string, crawResults []*global.CrawlResult) {
 	var (
-		coll *mongo.Collection
+		coll     *mongo.Collection
+		crawlTmp global.CrawlResult
 	)
 
 	switch category {
@@ -22,8 +23,9 @@ func Persistence(category string, crawResults []*global.CrawlResult) {
 		coll = mymongo.XiaoDaoColl
 	case "养生":
 		coll = mymongo.YangShengColl
+	default:
+		return
 	}
-	coll.DeleteMany(context.Background(), bson.M{})
 
 	for _, cr := range crawResults {
 		doc := bson.M{
@@ -32,6 +34,14 @@ func Persistence(category string, crawResults []*global.CrawlResult) {
 			"img":   cr.Img,
 			"title": cr.Title,
 		}
+		crawlTmp.Id = ""
+		if err := coll.FindOne(context.Background(), bson.D{{"url", cr.Url}}).Decode(&crawlTmp); err == nil {
+			//已存在
+			if crawlTmp.Id != "" {
+				break
+			}
+		}
+
 		rId, err := coll.InsertOne(context.Background(), doc)
 		if err != nil {
 			log.Print("insert one: ", err)
