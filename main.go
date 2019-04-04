@@ -12,6 +12,7 @@ import (
 func main() {
 	mongo.Init()
 	defer mongo.Dispose()
+	defer global.Save()
 
 	var (
 		urls      = conf.Conf.Qq
@@ -27,6 +28,7 @@ func main() {
 		}
 	} else {
 		//todo: 读库
+
 	}
 
 	go global.Sync()

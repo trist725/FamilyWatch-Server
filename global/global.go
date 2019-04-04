@@ -44,18 +44,22 @@ func Sync() {
 	for {
 		<-t.C
 		fmt.Println("Sync...")
-		for _, u := range Users {
-			_, err := mongo.UserColl.UpdateOne(context.Background(), bson.M{"_id": u.Openid}, bson.D{{"$set", bson.D{
-				{"_id", u.Openid},
-				{"SessionKey", u.SessionKey},
-				{"Unionid", u.Unionid},
-				{"Favs", u.Favs},
-				{"LastLogin", u.LastLogin},
-			}}}, options.Update().SetUpsert(true))
-			if err != nil {
-				log.Print("sync: ", err)
-			}
-		}
+		Save()
 	}
 
+}
+
+func Save() {
+	for _, u := range Users {
+		_, err := mongo.UserColl.UpdateOne(context.Background(), bson.M{"_id": u.Openid}, bson.D{{"$set", bson.D{
+			{"_id", u.Openid},
+			{"SessionKey", u.SessionKey},
+			{"Unionid", u.Unionid},
+			{"Favs", u.Favs},
+			{"LastLogin", u.LastLogin},
+		}}}, options.Update().SetUpsert(true))
+		if err != nil {
+			log.Print("sync: ", err)
+		}
+	}
 }
