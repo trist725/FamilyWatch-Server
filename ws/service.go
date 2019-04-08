@@ -6,7 +6,6 @@ import (
 	"FamilyWatch/global"
 	"context"
 	"encoding/json"
-	"flag"
 	"github.com/trist725/mgsu/util"
 	"go.mongodb.org/mongo-driver/bson"
 	"log"
@@ -15,7 +14,7 @@ import (
 )
 
 func Start() {
-	flag.Parse()
+	//flag.Parse()
 	hub := newHub()
 	go hub.run()
 	http.HandleFunc("/wss", func(w http.ResponseWriter, r *http.Request) {
@@ -120,6 +119,14 @@ STARTOP:
 		resp.Errcode = 0
 
 	case 3:
+		for i, f := range userData[req.Openid].Favs {
+			//已收藏
+			if f == req.FavId {
+				//取消收藏
+				userData[req.Openid].Favs = append(userData[req.Openid].Favs[:i], userData[req.Openid].Favs[i+1:]...)
+				goto END
+			}
+		}
 		for _, c := range global.QQCrawled {
 			for _, v := range c {
 				if v.Id == req.FavId {
@@ -132,6 +139,16 @@ STARTOP:
 		resp.Errcode = 3
 	case 4:
 		resp.Favs = userData[req.Openid].Favs
+		for _, f := range userData[req.Openid].Favs {
+			for _, c := range global.QQCrawled {
+				for _, v := range c {
+					if v.Id == f {
+						resp.Resources = append(resp.Resources, *v)
+					}
+				}
+			}
+		}
+
 		resp.Errcode = 0
 
 	default:
