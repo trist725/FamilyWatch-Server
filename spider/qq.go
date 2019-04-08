@@ -40,6 +40,7 @@ func (this *QQVideoPageProcessor) Process(p *page.Page) {
 		url, _ := s.Find("div>a").Attr("href")
 		title, _ := s.Find("div>a>img").Attr("alt")
 		img, _ := s.Find("div>a>img").Attr("src")
+		img = "https:" + img
 		dur := s.Find("div>a>span[class=figure_caption]>span").Text()
 		title = strings.Replace(title, "\006", "", -1)
 		fmt.Printf("Review %d: %s - %s - %s - %s\n", i, url, title, img, dur)
