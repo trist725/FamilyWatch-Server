@@ -20,13 +20,20 @@ func Start() {
 	http.HandleFunc("/wss", func(w http.ResponseWriter, r *http.Request) {
 		serveWss(hub, w, r)
 	})
-	err := http.ListenAndServe(conf.Conf.WsAddr, nil)
-	//err := http.ListenAndServeTLS(conf.Conf.WsAddr,
-	//	conf.Conf.CertFile,
-	//	conf.Conf.KeyFile, nil)
+	var err error
+	if conf.Conf.Encrypt {
+		err = http.ListenAndServeTLS(conf.Conf.WsAddr,
+			conf.Conf.CertFile,
+			conf.Conf.KeyFile, nil)
+	} else {
+		err = http.ListenAndServe(conf.Conf.WsAddr, nil)
+	}
+
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
 	}
+
+	log.Print("\r\nwebsocket service starting up..")
 }
 
 func (req Request) Process() (resp Respond) {
@@ -50,6 +57,7 @@ func (req Request) Process() (resp Respond) {
 			log.Print("UserColl.FindOne: ", err)
 			//数据库也找不到
 			if req.Code == "" || req.Op != 1 {
+				resp.Errcode = -1
 				goto END
 			} else {
 				goto STARTOP

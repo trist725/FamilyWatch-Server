@@ -19,6 +19,7 @@ var (
 		Qq            map[string]string `yaml:"qq"`
 		Iqiyi         []string          `yaml:"iqiyi"`
 		Youku         []string          `yaml:"youku"`
+		Encrypt       bool              `yaml:"Encrypt"`
 	}
 )
 
