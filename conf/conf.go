@@ -15,7 +15,7 @@ var (
 		WsAddr        string            `yaml:"WsAddr"`
 		MongoURI      string            `yaml:"MongoURI"`
 		CertFile      string            `yaml:"CertFile"`
-		KeyFile       string            `yaml:KeyFile`
+		KeyFile       string            `yaml:"KeyFile"`
 		Qq            map[string]string `yaml:"qq"`
 		Iqiyi         []string          `yaml:"iqiyi"`
 		Youku         []string          `yaml:"youku"`
