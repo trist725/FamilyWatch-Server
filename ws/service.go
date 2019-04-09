@@ -38,12 +38,13 @@ func Start() {
 
 func (req Request) Process() (resp Respond) {
 	var (
-		restResp *http.Response
-		w2sJson  W2S_Code2Session
-		userData = global.Users
-		userTmp  = global.User{}
-		ctx, _   = context.WithTimeout(context.Background(), 10*time.Second)
-		exist    bool
+		restResp    *http.Response
+		w2sJson     W2S_Code2Session
+		userData    = global.Users
+		userTmp     = global.User{}
+		ctx, _      = context.WithTimeout(context.Background(), 10*time.Second)
+		exist       bool
+		reRandCount int
 	)
 
 	//刷新直接给数据 不用登陆
@@ -121,7 +122,20 @@ STARTOP:
 			if len(crawled) == 0 {
 				break
 			}
+
+		RERAND:
+			if reRandCount > 100 {
+				resp.Errcode = -2
+				goto END
+			}
 			r := util.RandomInt(0, len(crawled))
+			//去重
+			for _, res := range resp.Resources {
+				if crawled[r].Url == res.Url {
+					goto RERAND
+				}
+			}
+
 			resp.Resources = append(resp.Resources, *crawled[r])
 		}
 		resp.Errcode = 0
