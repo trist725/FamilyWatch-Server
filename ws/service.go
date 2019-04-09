@@ -131,7 +131,9 @@ STARTOP:
 			r := util.RandomInt(0, len(crawled))
 			//去重
 			for _, res := range resp.Resources {
-				if crawled[r].Url == res.Url {
+				//这里用url比会出现http和https的相同资源
+				if crawled[r].Title == res.Title {
+					reRandCount++
 					goto RERAND
 				}
 			}
