@@ -45,6 +45,7 @@ func (this *QQVideoPageProcessor) Process(p *page.Page) {
 		title = strings.Replace(title, "\006", "", -1)
 		fmt.Printf("Review %d: %s - %s - %s - %s\n", i, url, title, img, dur)
 		min, _ := time.Parse("15:04:05", dur)
+		dur = min.Format("04:05")
 		//按分钟过滤
 		if min.Minute() >= conf.Conf.FilterMin {
 			//关键词分类
