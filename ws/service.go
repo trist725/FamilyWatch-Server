@@ -92,11 +92,13 @@ STARTOP:
 		}
 		resp.Openid = w2sJson.Openid
 		//写入内存待同步
-		userData[w2sJson.Openid] = &global.User{
-			Openid:     w2sJson.Openid,
-			SessionKey: w2sJson.Session_key,
-			Unionid:    w2sJson.Unionid,
-			LastLogin:  time.Now().Unix(),
+		if _, exist = userData[w2sJson.Openid]; !exist {
+			userData[w2sJson.Openid] = &global.User{
+				Openid:     w2sJson.Openid,
+				SessionKey: w2sJson.Session_key,
+				Unionid:    w2sJson.Unionid,
+				LastLogin:  time.Now().Unix(),
+			}
 		}
 
 	case 2:
