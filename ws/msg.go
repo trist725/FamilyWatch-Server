@@ -15,6 +15,8 @@ type Request struct {
 	Rnum int `json:"num, omitempty"`
 	//要收藏的视频id
 	FavId string `json:"favid, omitempty"`
+	//刷新加载,true-刷新,false-加载
+	Load bool `json:"load, omitempty"`
 }
 
 type Respond struct {
@@ -28,6 +30,8 @@ type Respond struct {
 	Resources []global.CrawlResult `json:"resources"`
 	//已收藏的资源的_id
 	Favs []string
+	//刷新加载,true-刷新,false-加载
+	Load bool `json:"load, omitempty"`
 }
 
 type S2W_Code2Session struct {

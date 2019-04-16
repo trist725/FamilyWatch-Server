@@ -143,6 +143,7 @@ STARTOP:
 			resp.Resources = append(resp.Resources, *crawled[r])
 		}
 		resp.Errcode = 0
+		resp.Load = req.Load
 
 	case 3:
 		for i, f := range userData[req.Openid].Favs {
