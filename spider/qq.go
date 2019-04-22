@@ -50,11 +50,21 @@ func (this *QQVideoPageProcessor) Process(p *page.Page) {
 		if min.Minute() >= conf.Conf.FilterMin {
 			//关键词分类
 			if this.category != "" && strings.Contains(url, "/x/page") {
+
+				start := strings.LastIndexByte(url, '/')
+				end := strings.LastIndex(url, ".html")
+				var vid string
+				if (start > 0 && start < len(url)) && (end > 0 && end < len(url)) {
+					vid = url[start+1 : end]
+				}
+				//ru := global.GetRealPath(vid)
 				global.QQCrawled[this.category] = append(global.QQCrawled[this.category], &global.CrawlResult{
 					Url:   url,
 					Title: title,
 					Img:   img,
 					Dur:   dur,
+					//RealPath: ru,
+					Vid: vid,
 				})
 			}
 		}

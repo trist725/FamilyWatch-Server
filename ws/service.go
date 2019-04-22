@@ -139,7 +139,8 @@ STARTOP:
 					goto RERAND
 				}
 			}
-
+			//实时获取真实地址
+			crawled[r].RealPath = global.GetRealPath(crawled[r].Vid)
 			resp.Resources = append(resp.Resources, *crawled[r])
 		}
 		resp.Errcode = 0
