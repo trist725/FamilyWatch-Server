@@ -123,6 +123,10 @@ func GetRealPath(vid string) string {
 			return ""
 		}
 		defer respInfo.Body.Close()
+		if len(bodyInfo) <= (len("QZOutputJson=") + 1) {
+			log.Print("invalid bodyInfo")
+			return ""
+		}
 		bodyInfo = bodyInfo[len("QZOutputJson=") : len(bodyInfo)-1]
 		json.Unmarshal(bodyInfo, &getInfo)
 
@@ -148,6 +152,10 @@ func GetRealPath(vid string) string {
 			return ""
 		}
 		defer respKey.Body.Close()
+		if len(bodyKey) <= (len("QZOutputJson=") + 1) {
+			log.Print("invalid bodyKey")
+			return ret
+		}
 		bodyKey = bodyKey[len("QZOutputJson=") : len(bodyKey)-1]
 		json.Unmarshal(bodyKey, &getKey)
 		key := getKey.Key
