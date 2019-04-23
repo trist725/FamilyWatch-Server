@@ -10,6 +10,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -74,8 +75,9 @@ type QqGetInfo struct {
 	Vl struct {
 		Vi []struct {
 			Cl struct {
-				Fc    string
+				Fc    int
 				Keyid string
+				Ci    string
 			} `json:"cl"`
 			Ul struct {
 				Ui []struct {
@@ -95,6 +97,10 @@ type fl struct {
 	} `json:"fi"`
 }
 
+type QqGetKey struct {
+	Key string
+}
+
 func GetRealPath(vid string) string {
 	if vid == "" {
 		log.Print("invalid vid..")
@@ -102,27 +108,52 @@ func GetRealPath(vid string) string {
 	}
 
 	var (
-		getInfo   QqGetInfo
-		platforms = []string{"1", "4100201", "11", "101100"}
-		ret       string
+		getInfo      QqGetInfo
+		getKey       QqGetKey
+		platforms    = []string{"1", "4100201", "11", "101100"}
+		ret          string
+		partFormatId string
 	)
 	for _, p := range platforms {
 		getInfoUrl := "https://vv.video.qq.com/getinfo?otype=json&platform=" + p + "&defnpayver=1&vid=" + vid
-		resp, _ := http.Get(getInfoUrl)
-		body, err := ioutil.ReadAll(resp.Body)
+		respInfo, _ := http.Get(getInfoUrl)
+		bodyInfo, err := ioutil.ReadAll(respInfo.Body)
 		if err != nil {
 			log.Print("getInfo failed..")
 			return ""
 		}
-		defer resp.Body.Close()
-		body = body[len("QZOutputJson=") : len(body)-1]
-		json.Unmarshal(body, &getInfo)
+		defer respInfo.Body.Close()
+		bodyInfo = bodyInfo[len("QZOutputJson=") : len(bodyInfo)-1]
+		json.Unmarshal(bodyInfo, &getInfo)
 
 		host := getInfo.Vl.Vi[0].Ul.Ui[0].Url
 		fileName := getInfo.Vl.Vi[0].Fn
 		vkey := getInfo.Vl.Vi[0].Fvkey
 
 		ret = host + fileName + "?vkey=" + vkey
+
+		if getInfo.Vl.Vi[0].Cl.Fc == 0 {
+			part_format_id := getInfo.Vl.Vi[0].Cl.Keyid
+			sp := strings.Split(part_format_id, ".")
+			partFormatId = sp[len(sp)-1]
+		} else {
+			//part_format_id := getInfo.Vl.Vi[0].Cl.Ci[]
+		}
+
+		getKeyUrl := "https://vv.video.qq.com/getkey?otype=json&platform=11&format=" + partFormatId + "&vid=" + vid + "&filename=" + fileName
+		respKey, _ := http.Get(getKeyUrl)
+		bodyKey, err := ioutil.ReadAll(respKey.Body)
+		if err != nil {
+			log.Print("getKey failed..")
+			return ""
+		}
+		defer respKey.Body.Close()
+		bodyKey = bodyKey[len("QZOutputJson=") : len(bodyKey)-1]
+		json.Unmarshal(bodyKey, &getKey)
+		key := getKey.Key
+
+		ret = host + fileName + "?vkey=" + key
+
 		return ret
 	}
 
