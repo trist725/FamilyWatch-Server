@@ -128,6 +128,7 @@ STARTOP:
 		RERAND:
 			if reRandCount > 100 {
 				resp.Errcode = -2
+				resp.Load = req.Load
 				goto END
 			}
 			r := util.RandomInt(0, len(crawled))
