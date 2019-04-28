@@ -148,6 +148,11 @@ STARTOP:
 				resp.Resources = append(resp.Resources, *cTmp)
 			}
 		}
+
+		if f, ok := userData[req.Openid]; ok {
+			resp.Favs = f.Favs
+		}
+
 		resp.Errcode = 0
 		resp.Load = req.Load
 
@@ -162,7 +167,7 @@ STARTOP:
 		}
 		for _, c := range global.QQCrawled {
 			for _, v := range c {
-				if v.Vid == req.Vid {
+				if v.Vid == req.FavId {
 					userData[req.Openid].Favs = append(userData[req.Openid].Favs, v.Vid)
 					resp.Errcode = 0
 					goto END
@@ -174,8 +179,8 @@ STARTOP:
 		resp.Favs = userData[req.Openid].Favs
 		for _, f := range userData[req.Openid].Favs {
 			for _, c := range global.QQCrawled {
-				for _, v := range c {
-					if v.Vid == f {
+				for vid, v := range c {
+					if vid == f {
 						resp.Resources = append(resp.Resources, *v)
 					}
 				}
