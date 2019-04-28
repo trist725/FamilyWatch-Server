@@ -13,7 +13,7 @@ type Request struct {
 	Rcategory string `json:"category, omitempty"`
 	//刷新数量
 	Rnum int `json:"num, omitempty"`
-	//要收藏的视频id
+	//要收藏的视频vid
 	FavId string `json:"favid, omitempty"`
 	//刷新加载,true-刷新,false-加载
 	Load bool   `json:"load, omitempty"`

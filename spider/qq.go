@@ -16,11 +16,14 @@ var (
 )
 
 type QQVideoPageProcessor struct {
-	category string
+	category              string
+	categoryCrawledResult map[string]*global.CrawlResult
 }
 
 func NewQQVideoPageProcessor() *QQVideoPageProcessor {
-	return &QQVideoPageProcessor{}
+	return &QQVideoPageProcessor{
+		categoryCrawledResult: make(map[string]*global.CrawlResult),
+	}
 }
 
 func (this *QQVideoPageProcessor) SetCategory(c string) *QQVideoPageProcessor {
@@ -58,14 +61,14 @@ func (this *QQVideoPageProcessor) Process(p *page.Page) {
 					vid = url[start+1 : end]
 				}
 				//ru := global.GetRealPath(vid)
-				global.QQCrawled[this.category] = append(global.QQCrawled[this.category], &global.CrawlResult{
+				this.categoryCrawledResult[vid] = &global.CrawlResult{
 					Url:   url,
 					Title: title,
 					Img:   img,
 					Dur:   dur,
 					//RealPath: ru,
 					Vid: vid,
-				})
+				}
 			}
 		}
 	})
@@ -83,7 +86,9 @@ func (this *QQVideoPageProcessor) Process(p *page.Page) {
 }
 
 func (this *QQVideoPageProcessor) Finish() {
-	fmt.Printf("[%s] crawled num: [%d] \r\n", this.category, len(global.QQCrawled[this.category]))
+	global.QQCrawled[this.category] = this.categoryCrawledResult
+	fmt.Printf("[%s] crawled num: [%d] \r\n", this.category, len(this.categoryCrawledResult))
+	//todo: 去重
 	for k, v := range global.QQCrawled {
 		Persistence(k, v)
 	}

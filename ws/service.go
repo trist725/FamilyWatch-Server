@@ -6,7 +6,6 @@ import (
 	"FamilyWatch/global"
 	"context"
 	"encoding/json"
-	"github.com/trist725/mgsu/util"
 	"go.mongodb.org/mongo-driver/bson"
 	"log"
 	"net/http"
@@ -48,7 +47,7 @@ func (req Request) Process() (resp Respond) {
 	)
 
 	//刷新直接给数据 不用登陆
-	if req.Op == 2 {
+	if req.Op == 2 || req.Op == 5 {
 		goto STARTOP
 	}
 
@@ -106,7 +105,7 @@ STARTOP:
 			resp.Errcode = 2
 			break
 		}
-		var crawled []*global.CrawlResult
+		var crawled map[string]*global.CrawlResult
 		var ok bool
 		if req.Rcategory == "随机" {
 			for _, c := range global.QQCrawled {
@@ -124,25 +123,30 @@ STARTOP:
 			if len(crawled) == 0 {
 				break
 			}
-
+			//r := util.RandomInt(0, len(crawled))
+			//去重
 		RERAND:
 			if reRandCount > 100 {
 				resp.Errcode = -2
 				resp.Load = req.Load
 				goto END
 			}
-			r := util.RandomInt(0, len(crawled))
-			//去重
+			var cTmp *global.CrawlResult
+			for _, cTmp = range crawled {
+				break
+			}
 			for _, res := range resp.Resources {
 				//这里用url比会出现http和https的相同资源
-				if crawled[r].Title == res.Title {
+				if cTmp.Vid == res.Vid {
 					reRandCount++
 					goto RERAND
 				}
 			}
 			//实时获取真实地址
-			crawled[r].RealPath = global.GetRealPath(crawled[r].Vid)
-			resp.Resources = append(resp.Resources, *crawled[r])
+			if cTmp != nil {
+				cTmp.RealPath = global.GetRealPath(cTmp.Vid)
+				resp.Resources = append(resp.Resources, *cTmp)
+			}
 		}
 		resp.Errcode = 0
 		resp.Load = req.Load
@@ -158,8 +162,8 @@ STARTOP:
 		}
 		for _, c := range global.QQCrawled {
 			for _, v := range c {
-				if v.Id == req.FavId {
-					userData[req.Openid].Favs = append(userData[req.Openid].Favs, v.Id)
+				if v.Vid == req.Vid {
+					userData[req.Openid].Favs = append(userData[req.Openid].Favs, v.Vid)
 					resp.Errcode = 0
 					goto END
 				}

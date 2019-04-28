@@ -10,7 +10,7 @@ import (
 	"log"
 )
 
-func Persistence(category string, crawResults []*global.CrawlResult) {
+func Persistence(category string, crawResults map[string]*global.CrawlResult) {
 	var (
 		coll     *mongo.Collection
 		crawlTmp global.CrawlResult
@@ -33,9 +33,10 @@ func Persistence(category string, crawResults []*global.CrawlResult) {
 			"dur":   cr.Dur,
 			"img":   cr.Img,
 			"title": cr.Title,
+			"vid":   cr.Vid,
 		}
 		crawlTmp.Id = ""
-		if err := coll.FindOne(context.Background(), bson.D{{"url", cr.Url}}).Decode(&crawlTmp); err == nil {
+		if err := coll.FindOne(context.Background(), bson.D{{"vid", cr.Vid}}).Decode(&crawlTmp); err == nil {
 			//已存在
 			if crawlTmp.Id != "" {
 				continue

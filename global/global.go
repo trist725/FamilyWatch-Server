@@ -38,7 +38,7 @@ type User struct {
 var (
 	//openid为key
 	Users        = make(map[string]*User)
-	QQCrawled    = make(map[string][]*CrawlResult)
+	QQCrawled    = make(map[string]map[string]*CrawlResult)
 	IqiyiCrawled = make(map[string][]*CrawlResult)
 	YoukuCrawled = make(map[string][]*CrawlResult)
 )

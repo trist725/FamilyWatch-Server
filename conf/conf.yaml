@@ -4,7 +4,7 @@ MongoURI: mongodb://admin:admin@47.110.73.211:27017/admin
 
 RunSpider: true
 
-FilterMin: 1
+FilterMin: 10
 
 MaxCrawlIndex: 50
 
