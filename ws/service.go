@@ -149,10 +149,6 @@ STARTOP:
 			}
 		}
 
-		if f, ok := userData[req.Openid]; ok {
-			resp.Favs = f.Favs
-		}
-
 		resp.Errcode = 0
 		resp.Load = req.Load
 
@@ -202,6 +198,9 @@ STARTOP:
 	}
 
 END:
+	if f, ok := userData[req.Openid]; ok {
+		resp.Favs = f.Favs
+	}
 	resp.Op = req.Op
 
 	return resp
