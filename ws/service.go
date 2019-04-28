@@ -175,7 +175,7 @@ STARTOP:
 		for _, f := range userData[req.Openid].Favs {
 			for _, c := range global.QQCrawled {
 				for _, v := range c {
-					if v.Id == f {
+					if v.Vid == f {
 						resp.Resources = append(resp.Resources, *v)
 					}
 				}
