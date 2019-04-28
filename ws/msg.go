@@ -3,7 +3,7 @@ package ws
 import "FamilyWatch/global"
 
 type Request struct {
-	//操作类型,1-登陆,2-刷新,3-(取消)收藏,4-获取收藏
+	//操作类型,1-登陆,2-刷新,3-(取消)收藏,4-获取收藏,5-获取真实地址
 	Op int `json:"op, omitempty"`
 	//客户端调用wx.login()获取到的登陆凭证
 	Code string `json:"code, omitempty"`
@@ -16,7 +16,8 @@ type Request struct {
 	//要收藏的视频id
 	FavId string `json:"favid, omitempty"`
 	//刷新加载,true-刷新,false-加载
-	Load bool `json:"load, omitempty"`
+	Load bool   `json:"load, omitempty"`
+	Vid  string `json:"vid, omitempty"`
 }
 
 type Respond struct {
@@ -31,7 +32,8 @@ type Respond struct {
 	//已收藏的资源的_id
 	Favs []string
 	//刷新加载,true-刷新,false-加载
-	Load bool `json:"load, omitempty"`
+	Load     bool   `json:"load, omitempty"`
+	RealPath string `json:"realpath, omitempty"`
 }
 
 type S2W_Code2Session struct {

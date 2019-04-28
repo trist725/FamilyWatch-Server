@@ -179,6 +179,13 @@ STARTOP:
 		}
 
 		resp.Errcode = 0
+	case 5:
+		if req.Vid == "" {
+			resp.Errcode = 5
+			return
+		}
+		resp.RealPath = global.GetRealPath(req.Vid)
+		resp.Errcode = 0
 
 	default:
 		log.Print("invalid op")
