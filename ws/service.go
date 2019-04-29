@@ -190,6 +190,7 @@ STARTOP:
 			return
 		}
 		resp.RealPath = global.GetRealPath(req.Vid)
+		resp.Vid = req.Vid
 		resp.Errcode = 0
 
 	default:

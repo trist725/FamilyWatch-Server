@@ -34,6 +34,7 @@ type Respond struct {
 	//刷新加载,true-刷新,false-加载
 	Load     bool   `json:"load, omitempty"`
 	RealPath string `json:"realpath, omitempty"`
+	Vid      string `json:"vid, omitempty"`
 }
 
 type S2W_Code2Session struct {
