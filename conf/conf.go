@@ -9,7 +9,7 @@ import (
 var (
 	Conf struct {
 		RunSpider     bool   `yaml:"RunSpider"`
-		FilterMin     int    `yaml:"FilteMin"`
+		FilterMin     int    `yaml:"FilterMin"`
 		MaxCrawlIndex int    `yaml:"MaxCrawlIndex"`
 		RefreshLimit  int    `yaml:"RefreshLimit"`
 		WsAddr        string `yaml:"WsAddr"`

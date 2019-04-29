@@ -17,8 +17,8 @@ func Persistence(category string, crawResults map[string]*global.CrawlResult) {
 	)
 
 	switch category {
-	case "佛缘":
-		coll = mymongo.FoyuanColl
+	case "开心":
+		coll = mymongo.KaiXinColl
 	case "孝道":
 		coll = mymongo.XiaoDaoColl
 	case "旅游":

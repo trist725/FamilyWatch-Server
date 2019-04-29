@@ -13,7 +13,7 @@ import (
 var (
 	Colls []*mongo.Collection
 
-	FoyuanColl   *mongo.Collection
+	KaiXinColl   *mongo.Collection
 	XiaoDaoColl  *mongo.Collection
 	UserColl     *mongo.Collection
 	LvYouColl    *mongo.Collection
@@ -33,12 +33,12 @@ func Init() {
 
 	LvYouColl = client.Database("FamilyWatch").Collection("LvYou")
 	JianKangColl = client.Database("FamilyWatch").Collection("JianKang")
-	FoyuanColl = client.Database("FamilyWatch").Collection("FoYuan")
+	KaiXinColl = client.Database("FamilyWatch").Collection("KaiXin")
 	XiaoDaoColl = client.Database("FamilyWatch").Collection("XiaoDao")
 	ZhuFuColl = client.Database("FamilyWatch").Collection("ZhuFu")
 	UserColl = client.Database("FamilyWatch").Collection("user")
 
-	Colls = append(Colls, FoyuanColl)
+	Colls = append(Colls, KaiXinColl)
 	Colls = append(Colls, XiaoDaoColl)
 	Colls = append(Colls, LvYouColl)
 	Colls = append(Colls, JianKangColl)
