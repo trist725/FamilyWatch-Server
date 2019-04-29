@@ -21,8 +21,12 @@ func Persistence(category string, crawResults map[string]*global.CrawlResult) {
 		coll = mymongo.FoyuanColl
 	case "孝道":
 		coll = mymongo.XiaoDaoColl
-	case "养生":
-		coll = mymongo.YangShengColl
+	case "旅游":
+		coll = mymongo.LvYouColl
+	case "祝福":
+		coll = mymongo.ZhuFuColl
+	case "健康":
+		coll = mymongo.JianKangColl
 	default:
 		return
 	}
