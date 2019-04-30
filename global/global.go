@@ -23,6 +23,7 @@ type CrawlResult struct {
 	Dur      string
 	RealPath string
 	Vid      string
+	Faved    bool
 }
 
 type User struct {
@@ -130,6 +131,13 @@ func GetRealPath(vid string) string {
 		bodyInfo = bodyInfo[len("QZOutputJson=") : len(bodyInfo)-1]
 		json.Unmarshal(bodyInfo, &getInfo)
 
+		if len(getInfo.Vl.Vi) <= 0 {
+			log.Print("getInfo vi slice len too short")
+			return ""
+		} else if len(getInfo.Vl.Vi[0].Ul.Ui) <= 0 {
+			log.Print("getInfo ui slice len too short")
+			return ""
+		}
 		host := getInfo.Vl.Vi[0].Ul.Ui[0].Url
 		fileName := getInfo.Vl.Vi[0].Fn
 		vkey := getInfo.Vl.Vi[0].Fvkey

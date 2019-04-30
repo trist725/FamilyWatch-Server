@@ -47,9 +47,9 @@ func (req Request) Process() (resp Respond) {
 	)
 
 	//刷新直接给数据 不用登陆
-	if req.Op == 2 || req.Op == 5 {
-		goto STARTOP
-	}
+	//if req.Op == 2 || req.Op == 5 {
+	//	goto STARTOP
+	//}
 
 	if _, exist = userData[req.Openid]; !exist {
 		//不在内存中则查找是否在数据库中
@@ -143,8 +143,20 @@ STARTOP:
 				}
 			}
 			//实时获取真实地址
+			var flag bool
 			if cTmp != nil {
 				cTmp.RealPath = global.GetRealPath(cTmp.Vid)
+				flag = false
+				for _, f := range userData[req.Openid].Favs {
+					if cTmp.Vid == f {
+						flag = true
+						cTmp.Faved = true
+						break
+					}
+				}
+				if !flag {
+					cTmp.Faved = false
+				}
 				resp.Resources = append(resp.Resources, *cTmp)
 			}
 		}
