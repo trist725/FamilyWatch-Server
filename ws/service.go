@@ -189,6 +189,7 @@ STARTOP:
 			for _, c := range global.QQCrawled {
 				for vid, v := range c {
 					if vid == f {
+						v.RealPath = global.GetRealPath(v.Vid)
 						resp.Resources = append(resp.Resources, *v)
 					}
 				}
