@@ -20,6 +20,7 @@ var (
 		Iqiyi         []string `yaml:"iqiyi"`
 		Youku         []string `yaml:"youku"`
 		Encrypt       bool     `yaml:"Encrypt"`
+		FilterMaxMin  int      `yaml:"FilterMaxMin"`
 	}
 )
 

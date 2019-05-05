@@ -116,7 +116,7 @@ func GetRealPath(vid string) string {
 		partFormatId string
 	)
 	for _, p := range platforms {
-		getInfoUrl := "https://vv.video.qq.com/getinfo?otype=json&platform=" + p + "&defnpayver=1&vid=" + vid
+		getInfoUrl := "https://vv.video.qq.com/getinfo?otype=json&platform=" + p + "&vid=" + vid + "&charge=0" + "&defnpayver=1"
 		respInfo, _ := http.Get(getInfoUrl)
 		bodyInfo, err := ioutil.ReadAll(respInfo.Body)
 		if err != nil {
@@ -144,15 +144,16 @@ func GetRealPath(vid string) string {
 
 		ret = host + fileName + "?vkey=" + vkey
 
+		var part_format_id string
 		if getInfo.Vl.Vi[0].Cl.Fc == 0 {
-			part_format_id := getInfo.Vl.Vi[0].Cl.Keyid
+			part_format_id = getInfo.Vl.Vi[0].Cl.Keyid
 			sp := strings.Split(part_format_id, ".")
 			partFormatId = sp[len(sp)-1]
 		} else {
-			//part_format_id := getInfo.Vl.Vi[0].Cl.Ci[]
+			//part_format_id = getInfo.Vl.Vi[0].Cl.Ci
 		}
 
-		getKeyUrl := "https://vv.video.qq.com/getkey?otype=json&platform=11&format=" + partFormatId + "&vid=" + vid + "&filename=" + fileName
+		getKeyUrl := "https://vv.video.qq.com/getkey?otype=json&format=" + partFormatId + "&vid=" + vid + "&filename=" + fileName + "&platform=" + p
 		respKey, _ := http.Get(getKeyUrl)
 		bodyKey, err := ioutil.ReadAll(respKey.Body)
 		if err != nil {
@@ -169,6 +170,11 @@ func GetRealPath(vid string) string {
 		key := getKey.Key
 
 		ret = host + fileName + "?vkey=" + key
+
+		if strings.Contains(host, "vipzj") ||
+			strings.Contains(host, "vlive") {
+			return ""
+		}
 
 		return ret
 	}
