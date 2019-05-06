@@ -153,7 +153,7 @@ func GetRealPath(vid string) string {
 			//part_format_id = getInfo.Vl.Vi[0].Cl.Ci
 		}
 
-		getKeyUrl := "https://vv.video.qq.com/getkey?otype=json&format=" + partFormatId + "&vid=" + vid + "&filename=" + fileName + "&platform=" + p
+		getKeyUrl := "https://vv.video.qq.com/getkey?otype=json&platform=11&format=" + partFormatId + "&vid=" + vid + "&filename=" + fileName
 		respKey, _ := http.Get(getKeyUrl)
 		bodyKey, err := ioutil.ReadAll(respKey.Body)
 		if err != nil {
